@@ -10,7 +10,7 @@ struct pipeline *pipeline_build(const char *command_line)
 {
   regex_t regex;
   int regexVal;
-  const char* pattern = "[ \t\n]*([\w\-\.]+)[ \t\n]*[\|><&]?";
+  const char* pattern = "[ \t\n]*([[a-zA-Z0-9_.-]]+)[ \t\n]*[|><&]?";
   
   regexVal = regcomp(&regex, pattern, 0);
   if (regexVal) {
