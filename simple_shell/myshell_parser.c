@@ -1,53 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #include "myshell_parser.h"
 #include "stddef.h"
 #include "regex.h"
@@ -65,6 +16,7 @@ void pipeline_free(struct pipeline *pipeline)
 }
 int main() {
   printf("Hello\n");
+  printf("Testing\n");
   return 0;
 }
   
