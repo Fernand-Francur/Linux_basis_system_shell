@@ -12,16 +12,38 @@ struct pipeline *pipeline_build(const char *command_line)
 {
   regex_t regex;
   int regexVal;
-  const char* pattern = "[ \t\n]*([[a-zA-Z0-9_.-]]+)[ \t\n]*[|><&]?";
+  size_t maxMatches = 5; //Trying some code I found in regex documentation
+  size_t maxGroups = 5;
+  unsigned int i,j,offset;
   
-  regexVal = regcomp(&regex, pattern, REG_EXTENDED);
+  regmatch_t groupArray[maxGroups];
+  const char* regPattern = "[ \t\n]*([[a-zA-Z0-9_.-]]+)[ \t\n]*[|><&]?";
+  char * cursor = command_line;
+  
+  regexVal = regcomp(&regex, regPattern, REG_EXTENDED);
   if (regexVal) {
     fprintf(stderr, "Regular Expression compilation failed Compilation failed\n");
     exit(1);
   }
+  
+  for (i = 0; i <  maxMatches; i++) { 
+    if ( regexec(&regex, command_line, maxGroups, groupArray, 0))
+	break;
+	
+	for(j = 0; j <  maxGroups; j++) {
+	  if (groupArray[j].rm_so == (size_t)-1)
+	    break;
 
-  regexVal = regexec(&regex, command_line, 0, NULL, 0);
+	  if (j == 0)
+	    offset = groupArray[j].rm_eo;
 
+	  //char cursorCopy
+
+
+	}
+    
+
+  }
   
   printf("%s", command_line);
 
