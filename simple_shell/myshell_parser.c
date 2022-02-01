@@ -14,9 +14,9 @@ struct pipeline *pipeline_build(const char *command_line)
   int regexVal;
   const char* pattern = "[ \t\n]*([[a-zA-Z0-9_.-]]+)[ \t\n]*[|><&]?";
   
-  regexVal = regcomp(&regex, pattern, 0);
+  regexVal = regcomp(&regex, pattern, REG_EXTENDED);
   if (regexVal) {
-    fprintf(stderr, "Compilation failed\n");
+    fprintf(stderr, "Regular Expression compilation failed Compilation failed\n");
     exit(1);
   }
 
@@ -30,6 +30,8 @@ struct pipeline *pipeline_build(const char *command_line)
 }
 
 void pipeline_free(struct pipeline *pipeline)
+
+
 {
 	// TODO: Implement this function
 }
@@ -42,4 +44,3 @@ int main() {
   printf("Testing\n");
   return 0;
 }
-  
