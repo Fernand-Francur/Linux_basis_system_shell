@@ -13,6 +13,7 @@ void  pipeline_build(const char* command_line)
 {
   regex_t regex;
   int regexVal;
+  
   size_t maxMatches = 10; //Trying some code I found in regex documentation
   size_t maxGroups = 10;
   unsigned int i,j,offset;
