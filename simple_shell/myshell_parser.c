@@ -8,16 +8,17 @@
 
 //First Try
 
-struct pipeline *pipeline_build(const char *command_line)
+//struct pipeline *pipeline_build(const char *command_line)
+void  pipeline_build(const char* command_line)
 {
   regex_t regex;
   int regexVal;
-  size_t maxMatches = 5; //Trying some code I found in regex documentation
-  size_t maxGroups = 5;
+  size_t maxMatches = 10; //Trying some code I found in regex documentation
+  size_t maxGroups = 10;
   unsigned int i,j,offset;
   
   regmatch_t groupArray[maxGroups];
-  const char* regPattern = "[ \t\n]*([[a-zA-Z0-9_.-]]+)[ \t\n]*[|><&]?";
+  const char* regPattern = "[ \t\n]*([a-zA-Z0-9_.-]+)[ \t\n]*[|><&]?";
   char * cursor = command_line;
   
   regexVal = regcomp(&regex, regPattern, REG_EXTENDED);
@@ -37,18 +38,20 @@ struct pipeline *pipeline_build(const char *command_line)
 	  if (j == 0)
 	    offset = groupArray[j].rm_eo;
 
-	  //char cursorCopy
-
-
+	  char cursorCopy[strlen(cursor) + 1];
+	  strcpy(cursorCopy, cursor);
+	  cursorCopy[groupArray[j].rm_eo] = 0;
+	  printf("Match %u, Group %u: [%2u-%2u]: %s\n", i, j, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy + groupArray[j].rm_so);
+	  
 	}
-    
+	cursor += offset;
 
   }
-  
+  regfree(&regex);
   printf("%s", command_line);
 
   // TODO: Implement this function
-	return NULL;
+  //	return NULL;
 }
 
 void pipeline_free(struct pipeline *pipeline)
@@ -60,8 +63,8 @@ void pipeline_free(struct pipeline *pipeline)
 
 int main() {
   const char* com = "ls|wc -l >counts.txt\n";
-  struct pipeline commandtest;
-  commandtest = *pipeline_build(com);
+  // struct pipeline commandtest;
+  pipeline_build(com);
   printf("Hello\n");
   printf("Testing\n");
   return 0;
