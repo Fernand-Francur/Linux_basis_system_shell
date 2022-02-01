@@ -15,12 +15,14 @@ void  pipeline_build(const char* command_line)
   int regexVal;
   
   size_t maxMatches = 10; //Trying some code I found in regex documentation
-  size_t maxGroups = 10;
+  size_t maxGroups = 4;
   unsigned int i,j,offset;
   
   regmatch_t groupArray[maxGroups];
   const char* regPattern = "[ \t\n]*([a-zA-Z0-9_.-]+)[ \t\n]*[|><&]?";
   char * cursor = command_line;
+
+  printf("%s\n", command_line);
   
   regexVal = regcomp(&regex, regPattern, REG_EXTENDED);
   if (regexVal) {
@@ -31,7 +33,8 @@ void  pipeline_build(const char* command_line)
   for (i = 0; i <  maxMatches; i++) { 
     if ( regexec(&regex, command_line, maxGroups, groupArray, 0))
 	break;
-	
+
+    offset = 0;
 	for(j = 0; j <  maxGroups; j++) {
 	  if (groupArray[j].rm_so == (size_t)-1)
 	    break;
@@ -66,7 +69,7 @@ int main() {
   const char* com = "ls|wc -l >counts.txt\n";
   // struct pipeline commandtest;
   pipeline_build(com);
-  printf("Hello\n");
-  printf("Testing\n");
+  //printf("Hello\n");
+  // printf("Testing\n");
   return 0;
 }
