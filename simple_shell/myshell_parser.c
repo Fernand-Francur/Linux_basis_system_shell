@@ -23,7 +23,7 @@ void  pipeline_build(const char* command_line)
   const char* regPattern = "[ \t\n]*([a-zA-Z0-9_.-]+)[ \t\n]*[|><&]?";
   char * cursor = command_line;
 
-  printf("%s\n", command_line);
+  // printf("%s\n", command_line);
   
   regexVal = regcomp(&regex, regPattern, REG_EXTENDED);
   if (regexVal) {
@@ -46,12 +46,14 @@ void  pipeline_build(const char* command_line)
 	  char cursorCopy[strlen(cursor) + 1];
 	  strcpy(cursorCopy, cursor);
 	  cursorCopy[groupArray[j].rm_eo] = 0;
-	  printf("Match %u, Group %u: [%2u-%2u]: %s\n", i, j, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy + groupArray[j].rm_so);
+	  //printf("Match %u, Group %u: [%2u-%2u]: %s\n", i, j, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy + groupArray[j].rm_so);
 	  //printf("%s   %d     %d    %s\n", cursor, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy);
 
-
+	  char commandInput[strlen(cursorCopy + groupArray[j].rm_so)];
+	  strcpy(commandInput, cursorCopy + groupArray[j].rm_so);
+			    commandInput[strlen(commandInput)-1] = '\0';
 	  if (j == 0) {
-	    printf("%s\n", cursorCopy + groupArray[j].rm_so);
+	    printf("%s\n", commandInput);  //cursorCopy + groupArray[j].rm_so);
 	  switch (cursorCopy[groupArray[j].rm_eo - 1]) {
 	  case '|':
 	    printf("|\n");
