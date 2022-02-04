@@ -13,6 +13,7 @@ void  pipeline_build(const char* command_line)
 {
   regex_t regex;
   int regexVal;
+  struct pipeline output;
   
   size_t maxMatches = 10; //Trying some code I found in regex documentation
   size_t maxGroups = 4;
@@ -31,7 +32,7 @@ void  pipeline_build(const char* command_line)
   }
   
   for (i = 0; i <  maxMatches; i++) { 
-    if ( regexec(&regex, command_line, maxGroups, groupArray, 0))
+    if ( regexec(&regex, cursor, maxGroups, groupArray, 0))
 	break;
 
     offset = 0;
@@ -46,9 +47,67 @@ void  pipeline_build(const char* command_line)
 	  strcpy(cursorCopy, cursor);
 	  cursorCopy[groupArray[j].rm_eo] = 0;
 	  printf("Match %u, Group %u: [%2u-%2u]: %s\n", i, j, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy + groupArray[j].rm_so);
-	  
+	  //printf("%s   %d     %d    %s\n", cursor, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy);
+
+
+	  if (j == 0) {
+	    printf("%s\n", cursorCopy + groupArray[j].rm_so);
+	  switch (cursorCopy[groupArray[j].rm_eo - 1]) {
+	  case '|':
+	    printf("|\n");
+	    break;
+	  case ' ':
+	    printf("space\n");
+	    break;
+	  case '\t':
+	    printf("space\n");
+	    break;
+	  case '\n':
+	    printf("space\n");
+	    break;
+	  case '>':
+	    printf(">\n");
+	    break;
+	  case '<':
+	    printf("<\n");
+	    break;
+	  case '&':
+	    printf("&\n");
+	    break;
+	  default:
+	    printf("RegexFailed\n");
+	    break;
+	  }
+	  }
 	}
 	cursor += offset;
+	//printf("%s\n", cursor - groupArray[j].rm_eo);
+	//switch (cursor[groupArray[j].rm_eo]) {
+	  //case '|':
+	  //printf("|\n");
+	  //break;
+	  //case ' ':
+	  //printf("space\n");
+	  //break;
+	  //case '\t':
+	  //printf("space\n");
+	  //break;
+	  //case '\n':
+	  //printf("space\n");
+	  //break;
+	  //case '>':
+	  //printf(">\n");
+	  //break;
+	  //case '<':
+	  //printf("<\n");
+	  //break;
+	  //case '&':
+	  //printf("&\n");
+	  //break;
+	  //default:
+	  // printf("RegexFailed\n");
+	  // break;
+	  //}
 
   }
   regfree(&regex);
