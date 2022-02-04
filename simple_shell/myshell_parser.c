@@ -13,7 +13,11 @@ void  pipeline_build(const char* command_line)
 {
   regex_t regex;
   int regexVal;
-  struct pipeline output;
+  struct pipeline* output;
+  malloc(sizeof(struct pipeline));
+  struct pipeline_command* commandInit;
+  malloc(sizeof(struct pipeline_command));
+  char symbolChar;
   
   size_t maxMatches = 10; //Trying some code I found in regex documentation
   size_t maxGroups = 4;
@@ -53,8 +57,16 @@ void  pipeline_build(const char* command_line)
 	  strcpy(commandInput, cursorCopy + groupArray[j].rm_so);
 			    commandInput[strlen(commandInput)-1] = '\0';
 	  if (j == 0) {
+	    if ( i == 0 ) {
+	      strcpy(commandInit->command_args, commandInput);
+	      printf("%s\n", commandInit->command_args);
+	      commandInit->next = NULL;
+
+
+	    }
 	    printf("%s\n", commandInput);  //cursorCopy + groupArray[j].rm_so);
-	  switch (cursorCopy[groupArray[j].rm_eo - 1]) {
+	    if ( i != 0) {
+	    switch (symbolChar) {
 	  case '|':
 	    printf("|\n");
 	    break;
@@ -80,6 +92,10 @@ void  pipeline_build(const char* command_line)
 	    printf("RegexFailed\n");
 	    break;
 	  }
+	    }
+
+	    
+	  symbolChar = cursorCopy[groupArray[j].rm_eo - 1];
 	  }
 	}
 	cursor += offset;
