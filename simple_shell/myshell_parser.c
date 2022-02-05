@@ -17,7 +17,7 @@ void  pipeline_build(const char* command_line)
   struct pipeline_command *nextCommand;
   struct pipeline_command *tmp; // malloc(sizeof(struct pipeline_command));
   struct pipeline output;
-  int k,r;
+  int k;
   char * it;
   
   // struct pipeline_command* commandInit = malloc(sizeof(struct pipeline_command));
@@ -70,30 +70,41 @@ void  pipeline_build(const char* command_line)
 	      nextCommand->next = NULL;
 	      output.commands = nextCommand;
 	      tmp = nextCommand;
-
+	      //printf("%s\n",tmp->command_args[0]);
 
 	    } else {
-	    printf("%s\n", commandInput);  //cursorCopy + groupArray[j].rm_so);
+	      printf("%s\n", commandInput);  //cursorCopy + groupArray[j].rm_so);
 	    switch (symbolChar) {
-	    case '|': 
+	    case '|':
+	      
 	      nextCommand = malloc(sizeof(struct pipeline_command));
+	      //  printf("%s\n",tmp->command_args[0]);
+	      nextCommand->command_args[0] = malloc(sizeof(commandInput));
 	      strcpy(nextCommand->command_args[0], commandInput);
 	      nextCommand->command_args[1] = NULL;
-	      printf("%s\n", nextCommand->command_args[0]);
+	      //printf("%s\n", nextCommand->command_args[0]);
 	      nextCommand->next = NULL;
-	      output.commands = nextCommand;
+	      tmp->next = nextCommand;
 	      tmp = nextCommand;
 	    
 	    printf("|\n");
 	    break;
 	  case ' ':
-	    k = 0;
+	    k = -1;
+	    //it = malloc(sizeof(nextCommand->command_args[k]));
 	    do {
-	      it = next-command_args[k];
-	      k++;
-	      r = k-1;
-	    } while (it != NULL)
-	    nextCommand->command_args
+	      
+	     //it = malloc(sizeof(nextCommand->command_args[k]));
+	     it = nextCommand->command_args[k];
+	    //printf("%s\n", it);
+	     k = k+1;
+	    } while (it != NULL);
+	    //free(it);
+	     nextCommand->command_args[k-1] = malloc(sizeof(commandInput));
+	      strcpy(nextCommand->command_args[k-1], commandInput);
+	      nextCommand->command_args[k] = NULL;
+	      //  printf("%s\n", output.commands->next->command_args[k-1]);
+	    // tmp = nextCommand;
 	    printf("space\n");
 	    break;
 	  case '\t':
