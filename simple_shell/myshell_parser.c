@@ -62,12 +62,15 @@ void  pipeline_build(const char* command_line)
 			    commandInput[strlen(commandInput)-1] = '\0';
 	  if (j == 0) {
 	    if ( i == 0 ) {
+	      output.is_background = false;
 	      nextCommand = malloc(sizeof(struct pipeline_command));
 	      nextCommand->command_args[0] = malloc(sizeof(commandInput));
 	      strcpy(nextCommand->command_args[0], commandInput);
 	      nextCommand->command_args[1] = NULL;
 	      printf("%s\n", nextCommand->command_args[0]);
 	      nextCommand->next = NULL;
+	      nextCommand->redirect_in_path = NULL;
+	      nextCommand->redirect_out_path = NULL;
 	      output.commands = nextCommand;
 	      tmp = nextCommand;
 	      //printf("%s\n",tmp->command_args[0]);
@@ -108,18 +111,38 @@ void  pipeline_build(const char* command_line)
 	    printf("space\n");
 	    break;
 	  case '\t':
+	    k = -1;
+	    //it = malloc(sizeof(nextCommand->command_args[k]));
+	    do {
+
+	      //it = malloc(sizeof(nextCommand->command_args[k]));
+	      it = nextCommand->command_args[k];
+	      //printf("%s\n", it);
+	      k = k+1;
+	    } while (it != NULL);
+	    //free(it);
+	    nextCommand->command_args[k-1] = malloc(sizeof(commandInput));
+	    strcpy(nextCommand->command_args[k-1], commandInput);
+	    nextCommand->command_args[k] = NULL;
+	    //  printf("%s\n", output.commands->next->command_args[k-1]);
+	    // tmp = nextCommand;
 	    printf("space\n");
 	    break;
 	  case '\n':
 	    printf("space\n");
 	    break;
 	  case '>':
+	    nextCommand->redirect_out_path = malloc(sizeof(commandInput));
+	    strcpy(nextCommand->redirect_out_path, commandInput);
 	    printf(">\n");
 	    break;
 	  case '<':
+	    nextCommand->redirect_in_path = malloc(sizeof(commandInput));
+	    strcpy(nextCommand->redirect_in_path, commandInput);
 	    printf("<\n");
 	    break;
 	  case '&':
+	    output.is_background = true;
 	    printf("&\n");
 	    break;
 	  default:
@@ -133,34 +156,7 @@ void  pipeline_build(const char* command_line)
 	  }
 	}
 	cursor += offset;
-	//printf("%s\n", cursor - groupArray[j].rm_eo);
-	//switch (cursor[groupArray[j].rm_eo]) {
-	  //case '|':
-	  //printf("|\n");
-	  //break;
-	  //case ' ':
-	  //printf("space\n");
-	  //break;
-	  //case '\t':
-	  //printf("space\n");
-	  //break;
-	  //case '\n':
-	  //printf("space\n");
-	  //break;
-	  //case '>':
-	  //printf(">\n");
-	  //break;
-	  //case '<':
-	  //printf("<\n");
-	  //break;
-	  //case '&':
-	  //printf("&\n");
-	  //break;
-	  //default:
-	  // printf("RegexFailed\n");
-	  // break;
-	  //}
-
+      
   }
   regfree(&regex);
   printf("%s", command_line);
