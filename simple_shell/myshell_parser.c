@@ -9,7 +9,7 @@
 //First Try
 
 //struct pipeline *pipeline_build(const char *command_line)
-void  pipeline_build(const char* command_line)
+struct pipeline pipeline_build(const char* command_line)
 {
   regex_t regex;
   int regexVal;
@@ -29,7 +29,8 @@ void  pipeline_build(const char* command_line)
   
   regmatch_t groupArray[maxGroups];
   const char* regPattern = "[ \t\n]*([a-zA-Z0-9_.-]+)[ \t\n]*[|><&]?";
-  char * cursor = command_line;
+  char * cursor = malloc(sizeof(command_line));
+  strcpy(cursor, command_line);
 
   // printf("%s\n", command_line);
   
@@ -162,7 +163,7 @@ void  pipeline_build(const char* command_line)
   printf("%s", command_line);
 
   // TODO: Implement this function
-  //	return NULL;
+  	return output;
 }
 
 void pipeline_free(struct pipeline *pipeline)
@@ -174,9 +175,9 @@ void pipeline_free(struct pipeline *pipeline)
 
 int main() {
   const char* com = "ls|wc -l >counts.txt\n";
-  // struct pipeline commandtest;
-  pipeline_build(com);
+   struct pipeline commandtest;
+commandtest =  pipeline_build(com);
   //printf("Hello\n");
   // printf("Testing\n");
-  return 0;
+ return 0;
 }
