@@ -17,6 +17,8 @@ void  pipeline_build(const char* command_line)
   struct pipeline_command *nextCommand;
   struct pipeline_command *tmp; // malloc(sizeof(struct pipeline_command));
   struct pipeline output;
+  int k,r;
+  char * it;
   
   // struct pipeline_command* commandInit = malloc(sizeof(struct pipeline_command));
   char symbolChar;
@@ -74,16 +76,24 @@ void  pipeline_build(const char* command_line)
 	    printf("%s\n", commandInput);  //cursorCopy + groupArray[j].rm_so);
 	    switch (symbolChar) {
 	    case '|': 
-	    tmp = malloc(sizeof(struct pipeline_command));
-	    struct pipeline_command *nextCommand = malloc(sizeof(struct pipeline_command));
-	    nextCommand.command_args[0] = malloc(sizeof(commandInput));
-	    strcpy(nextCommand.command_args[0], commandInput);
-	    nextCommand.command_args[1] = NULL;
-	    nextCommand.next = NULL;
+	      nextCommand = malloc(sizeof(struct pipeline_command));
+	      strcpy(nextCommand->command_args[0], commandInput);
+	      nextCommand->command_args[1] = NULL;
+	      printf("%s\n", nextCommand->command_args[0]);
+	      nextCommand->next = NULL;
+	      output.commands = nextCommand;
+	      tmp = nextCommand;
 	    
 	    printf("|\n");
 	    break;
 	  case ' ':
+	    k = 0;
+	    do {
+	      it = next-command_args[k];
+	      k++;
+	      r = k-1;
+	    } while (it != NULL)
+	    nextCommand->command_args
 	    printf("space\n");
 	    break;
 	  case '\t':
