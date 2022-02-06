@@ -82,6 +82,6 @@ void pipeline_free(struct pipeline *pipeline);
  *   }
  *
  */
-// struct pipeline *pipeline_build(const char *command_line);
+struct pipeline *pipeline_build(const char *command_line);
 
 #endif /* MYSHELL_PARSER_H */

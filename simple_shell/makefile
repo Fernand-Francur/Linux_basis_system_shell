@@ -1,5 +1,5 @@
 
-override CFLAGS := -Wall -Werror -std=gnu99 -O1 -g $(CFLAGS) -I.
+override CFLAGS := -Wall -std=gnu99 -O1 -g $(CFLAGS) -I.
 
 # Build the parser .o file
 myshell_parser.o: myshell_parser.c myshell_parser.h

@@ -125,7 +125,6 @@ struct pipeline *pipeline_build(const char *command_line)
 	    //free(it);
 	    nextCommand->command_args[k-1] = malloc(sizeof(commandInput));
 	    strcpy(nextCommand->command_args[k-1], commandInput);
-	    
 	    nextCommand->command_args[k] = NULL;
 	    //  printf("%s\n", output.commands->next->command_args[k-1]);
 	    // tmp = nextCommand;

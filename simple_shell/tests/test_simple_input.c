@@ -33,4 +33,24 @@ main(void)
 	TEST_ASSERT(my_pipeline->commands->next == NULL);
 
 	pipeline_free(my_pipeline);
+
+	//struct pipeline* my_pipeline2 = pipeline_build("ls|wc -l >counts.txt&\n");
+
+	// Test that a pipeline was returned
+	//TEST_ASSERT(my_pipeline2 != NULL);
+	//TEST_ASSERT(my_pipeline2->is_background);
+	//TEST_ASSERT(my_pipeline2->commands != NULL);
+
+	// Test the parsed args
+	//TEST_ASSERT(strcmp("ls", my_pipeline2->commands->command_args[0]) == 0);
+	//TEST_ASSERT(my_pipeline2->commands->next->command_args[2] == NULL);
+
+	// Test the redirect state
+	//TEST_ASSERT(my_pipeline2->commands->redirect_in_path == NULL);
+	//TEST_ASSERT(my_pipeline2->commands->redirect_out_path != NULL);
+
+	// Test that there is only one parsed command in the pipeline
+	//TEST_ASSERT(my_pipeline2->commands->next->next == NULL);
+
+	//pipeline_free(my_pipeline2);
 }
