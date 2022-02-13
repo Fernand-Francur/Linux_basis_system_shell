@@ -33,7 +33,7 @@ struct pipeline *pipeline_build(const char *command_line)
     unsigned int cmd_offset = 0;
 
     regmatch_t groupArray[maxGroups];
-    const char *regPattern = "[ \t]*([a-z|A-Z|0-9|_|\\.|\\/|-]+)[ \t]*([|><&\n]?)";
+    const char *regPattern = "[ \t]*([a-zA-Z0-9\\_\\.\\/\\-]+)[ \t]*([|><&\n]?)";
     // ([||\\>|\\<|\\&|\n]?)
     char *cursor = malloc(sizeof(command_line));
     strcpy(cursor, command_line);
@@ -52,6 +52,7 @@ struct pipeline *pipeline_build(const char *command_line)
     char prev_symbol[2] = {'|', '\0'};
     unsigned int curr_cmd_offset = 0;
     unsigned cmd_size;
+    // printf("before parsing\n");
     while ((regexec(&regex_type, &command_line[cmd_offset], maxGroups, groupArray, 0) == 0)) {
         while ((groupArray[2].rm_so == groupArray[2].rm_eo) && (cmd_offset < strlen(command_line)) ) {
             // keep building command

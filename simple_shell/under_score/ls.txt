@@ -1,0 +1,15 @@
+abc.txt
+a.out
+counts.txt
+makefile
+myshell
+myshell.c
+myshell.h
+myshell.o
+myshell_parser.c
+myshell_parser.h
+myshell_parser.o
+README.md
+README.txt
+under_score
+wc.txt

@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
                         }
                         // OUTPUT
                         if (tmp->redirect_out_path != NULL) { // redirect output to file
-                            f_out = open(tmp->redirect_out_path, O_WRONLY | O_TRUNC | O_CREAT, 666);
+                            f_out = open(tmp->redirect_out_path, O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU | S_IRGRP);
                             close(STDOUT_FILENO);
                             dup(f_out);
                             close(f_out);
@@ -210,9 +210,9 @@ int main(int argc, char *argv[]) {
                 if (strcmp(tmp->command_args[0], "exit") == 0) /* exit command */
                     break;
             }
-            if (cmdPipeline->commands != NULL) {
-                pipeline_free(cmdPipeline);
-            }
+            //if (cmdPipeline->commands != NULL) {
+            //    pipeline_free(cmdPipeline);
+            //}
         }
         if(fget_code == 0) {
             exit(0);
