@@ -17,7 +17,9 @@
  * Represents a single command in a pipeline.
  */
 struct pipeline_command {
-	char *command_args; /* List of pointers to each
+	//char *command_args;
+    char *command_args[MAX_ARGV_LENGTH];
+    /* List of pointers to each
 						argument for a command. The
 						first entry is the command
 						name. The last entry is NULL.
