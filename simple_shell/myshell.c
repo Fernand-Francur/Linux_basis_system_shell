@@ -17,26 +17,26 @@ Program to mimic linux shell interface
 #define MAX_CMDS 10 // The maximum pipelined commands
 #define MAX_BACKGROUND_PIDS 100
 
-void add_pid(int pidlist[], int pid, int pid_num) {
-    if (pid_num < MAX_BACKGROUND_PIDS)
-        pidlist[pid_num] = pid;
-    else {
-        printf("Cannot create more that %d background processes.");
-        exit(1);
-    }
-}
+// void add_pid(int pidlist[], int pid, int pid_num) {
+//     if (pid_num < MAX_BACKGROUND_PIDS)
+//         pidlist[pid_num] = pid;
+//     else {
+//         printf("Cannot create more that %d background processes.");
+//         exit(1);
+//     }
+// }
 
-void remove_pid(int pidlist[], int pid, int pid_num) {
-    if(pid_num > 0) {
-        for (int i = 0, j = 0; i < pid_num; i++) {
-            if (pidlist[i] != pid) {
-                pidlist[j++] = pidlist[i];
-            }
-        }
-    } else {
-        printf('There is no more registered background processes.');
-    }
-}
+// void remove_pid(int pidlist[], int pid, int pid_num) {
+//     if(pid_num > 0) {
+//         for (int i = 0, j = 0; i < pid_num; i++) {
+//             if (pidlist[i] != pid) {
+//                 pidlist[j++] = pidlist[i];
+//             }
+//         }
+//     } else {
+//         printf('There is no more registered background processes.');
+//     }
+// }
 
 
 void sigchlHandler(int signal) {
@@ -138,9 +138,9 @@ int main(int argc, char *argv[]) {
                 pid_t pid;
                 pid = fork(); /* fork child process */
 
-                if (cmdPipeline->is_background) {
-                    add_pid(pidlist, pid, pid_num++);
-                }
+                // if (cmdPipeline->is_background) {
+                //     add_pid(pidlist, pid, pid_num++);
+                // }
 
                 switch (pid) {
                     case 0 :  /* child  */
@@ -210,9 +210,9 @@ int main(int argc, char *argv[]) {
                 if (strcmp(tmp->command_args[0], "exit") == 0) /* exit command */
                     break;
             }
-            //if (cmdPipeline->commands != NULL) {
-            //    pipeline_free(cmdPipeline);
-            //}
+            if (cmdPipeline->commands != NULL) {
+                pipeline_free(cmdPipeline);
+            }
         }
         if(fget_code == 0) {
             exit(0);
