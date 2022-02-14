@@ -14,7 +14,7 @@ Program to mimic linux shell interface
 #include <sys/fcntl.h>
 
 #define MAX_LINE 512 /* The maximum length command */
-#define MAX_CMDS 10 // The maximum pipelined commands
+#define MAX_CMDS 100 // The maximum pipelined commands
 #define MAX_BACKGROUND_PIDS 100
 
 // void add_pid(int pidlist[], int pid, int pid_num) {
@@ -44,10 +44,9 @@ void sigchlHandler(int signal) {
     pid_t child_Pid;
 
     while((child_Pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        // printf("Background child %d terminated with status %d\n", 
+        //                     child_Pid, status);
 
-//        pid_remove(pidlist, child_Pid);
-        // printf("child %ld terminates\n", child_Pid);
-//        printf("my_shell&");
     }
 }
 
@@ -57,20 +56,22 @@ int main(int argc, char *argv[]) {
     int num_cmds = 0;
     int num_pipes = 0;
     int pipe_idx = 0;
-    int fget_code;
+    char* fget_code;
 
-    int pidlist[MAX_BACKGROUND_PIDS];
-    int pid_num = 0;
+    // int pidlist[MAX_BACKGROUND_PIDS];
+    // int pid_num = 0;
 
     int should_run = 1; /* flag to determine when to exit program */
     char user_input[MAX_LINE];
 
     struct pipeline *cmdPipeline;
     struct pipeline_command *tmp;
-    struct pidlist * background_pid_list = NULL;
+    // struct pidlist * background_pid_list = NULL;
     struct sigaction sa;
 
     int f_in, f_out;
+    pid_t pids[MAX_CMDS];
+    int pid_status;
 
     // pipes
     int pipes[(MAX_CMDS - 1) * 2];
@@ -95,12 +96,15 @@ int main(int argc, char *argv[]) {
 
         memset(user_input, '\0', MAX_LINE);
         if ((fget_code = fgets(user_input, MAX_LINE, stdin)) != NULL) {
-            // printf("INITIAL INPUT: %s, size = %d\n", user_input, strlen(user_input));
-            char stringInput[strlen(user_input)];
-            strncpy(stringInput, user_input, strlen(user_input));
-            stringInput[strlen(user_input)] = '\0';
+            // printf("fget_code = %s\n", fget_code);
+            // printf("INITIAL INPUT: %s, size = %ld\n", user_input, strlen(user_input));
+            // char stringInput[strlen(user_input)];
+            // char stringInput[1024];
+            // strcpy(stringInput, user_input); //, strlen(user_input));
+            // stringInput[strlen(user_input)] = '\0';
             // printf("INPUT: %s\n", stringInput);
-            cmdPipeline = pipeline_build(stringInput);
+            cmdPipeline = pipeline_build(user_input);
+
 
 
             tmp = cmdPipeline->commands;
@@ -138,9 +142,7 @@ int main(int argc, char *argv[]) {
                 pid_t pid;
                 pid = fork(); /* fork child process */
 
-                // if (cmdPipeline->is_background) {
-                //     add_pid(pidlist, pid, pid_num++);
-                // }
+                pids[cmd_idx] = pid;
 
                 switch (pid) {
                     case 0 :  /* child  */
@@ -176,19 +178,19 @@ int main(int argc, char *argv[]) {
                             close(pipes[i * 2]); // close input pipe
                             close(pipes[i * 2 + 1]); // close output pipe
                         }
-                        if (cmdPipeline->commands != NULL) {
-                            if (execvp(tmp->command_args[0], tmp->command_args) < 0) {
-                                printf("ERROR: Invalid command\n");
-                                break;
-                            }
+                    
+                        if (execvp(tmp->command_args[0], tmp->command_args) < 0) {
+                            printf("ERROR: Invalid command\n");
+                            _exit(1);
                         }
+                        
                         break;
                     case -1: // error
                         _exit(1);
                         break;
                     default: // parent
 //                    printf("Parent cmd_idx = %d\n", cmd_idx);
-                        break;
+                      break;
                 }
             }
 
@@ -203,8 +205,18 @@ int main(int argc, char *argv[]) {
 
             if (!cmdPipeline->is_background) {
                 for (int i = 0; i < num_cmds; i++) {
-                    wait(NULL);
+                        // pid_t pid = 
+                        waitpid(pids[i], &pid_status, 0);
+                    // wait(NULL);
+                        // printf("Child %d terminated with status %d\n", 
+                        //     pid, pid_status);
                 }
+            } else {
+                printf("[1] ");
+                for (int i = 0; i < num_cmds; i++) {
+                    printf("%d ", pids[i]);
+                }
+                printf("\n");
             }
             if (tmp != NULL) {
                 if (strcmp(tmp->command_args[0], "exit") == 0) /* exit command */
@@ -213,9 +225,12 @@ int main(int argc, char *argv[]) {
             if (cmdPipeline->commands != NULL) {
                 pipeline_free(cmdPipeline);
             }
-        }
-        if(fget_code == 0) {
-            exit(0);
+        } else {
+            if((fget_code == NULL) && feof(stdin)) {
+                // printf("fget_code = %s\n", fget_code);
+                // printf("INITIAL INPUT: %s, size = %ld\n", user_input, strlen(user_input));
+                exit(0);
+            }
         }
     }
 

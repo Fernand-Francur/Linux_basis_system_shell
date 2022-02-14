@@ -1,12 +1,23 @@
-abc.txt
-a.out
-counts.txt
-makefile
-myshell
-myshell.c
-myshell.h
-myshell.o
-myshell_parser.c
-myshell_parser.h
-myshell_parser.o
-wc.txt
+total 128
+drwxrwx--- 1 root vboxsf  4096 Feb 13 18:40 .
+drwxrwx--- 1 root vboxsf  4096 Feb 13 13:24 ..
+-rwxrwx--- 1 root vboxsf     0 Feb 13 18:41 abc.txt
+-rwxrwx--- 1 root vboxsf 17720 Feb 13 10:01 a.out
+-rwxrwx--- 1 root vboxsf   122 Feb 13 12:16 counts.txt
+-rwxrwx--- 1 root vboxsf     3 Feb 13 18:36 fed.txt
+-rwxrwx--- 1 root vboxsf     3 Feb 13 17:43 gotem.txt
+-rwxrwx--- 1 root vboxsf   344 Feb 13 17:39 makefile
+drwxrwx--- 1 root vboxsf     0 Feb 13 18:39 meep
+drwxrwx--- 1 root vboxsf     0 Feb 13 18:40 mep
+-rwxrwx--- 1 root vboxsf 31912 Feb 13 18:40 myshell
+-rwxrwx--- 1 root vboxsf  7955 Feb 13 18:24 myshell.c
+-rwxrwx--- 1 root vboxsf   175 Feb 12 20:52 myshell.h
+-rwxrwx--- 1 root vboxsf 15248 Feb 13 18:40 myshell.o
+-rwxrwx--- 1 root vboxsf 13617 Feb 13 18:07 myshell_parser.c
+-rwxrwx--- 1 root vboxsf  2717 Feb 11 17:05 myshell_parser.h
+-rwxrwx--- 1 root vboxsf 13864 Feb 13 18:40 myshell_parser.o
+-rwxrwx--- 1 root vboxsf    26 Feb 13 12:38 README.md
+-rwxrwx--- 1 root vboxsf    32 Feb 13 12:36 README.txt
+drwxrwx--- 1 root vboxsf     0 Feb 13 18:38 testingcase
+drwxrwx--- 1 root vboxsf     0 Feb 13 13:51 under_score
+-rwxrwx--- 1 root vboxsf   120 Feb 13 10:05 wc.txt

@@ -16,12 +16,12 @@ struct pipeline *pipeline_build(const char *command_line)
 
     struct pipeline_command *currCommand;
     struct pipeline_command *prevCommand = NULL; // malloc(sizeof(struct pipeline_command));
-    struct pipeline_command *begin =NULL;
+    // struct pipeline_command *begin;
     struct pipeline *result = malloc(sizeof(struct pipeline));
     result->commands = NULL;
     result->is_background = false;
     char background_key[2] = {'&', '\0'};
-    char EOL_key[2] = {'\n', '\0'};
+    // char EOL_key[2] = {'\n', '\0'};
     //int k;
     //char *it;
 
@@ -29,14 +29,14 @@ struct pipeline *pipeline_build(const char *command_line)
     // char symbolChar = "\0";
 
     //size_t maxMatches = 32; //Trying some code I found in regex_type documentation
-    size_t maxGroups = 3;
+    size_t maxGroups = 10;
     unsigned int cmd_offset = 0;
 
     regmatch_t groupArray[maxGroups];
-    const char *regPattern = "[ \t]*([a-zA-Z0-9\\_\\.\\/\\-]+)[ \t]*([|><&\n]?)";
+    const char *regPattern = "[ \t]*([a-zA-Z0-9_\\.\\/\\-]+)[ \t]*([|><\\&\n]?)";
     // ([||\\>|\\<|\\&|\n]?)
-    char *cursor = malloc(sizeof(command_line));
-    strcpy(cursor, command_line);
+    // char *cursor = malloc(sizeof(command_line));
+    // strcpy(cursor, command_line);
 
     // printf("%s\n", command_line);
 
@@ -46,8 +46,8 @@ struct pipeline *pipeline_build(const char *command_line)
         exit(1);
     }
 
-    char curr_cmd[80];
-    memset(curr_cmd, '\0', 80);
+    char curr_cmd[200];
+    memset(curr_cmd, '\0', 200);
     char last_symbol[2];
     char prev_symbol[2] = {'|', '\0'};
     unsigned int curr_cmd_offset = 0;
@@ -74,7 +74,8 @@ struct pipeline *pipeline_build(const char *command_line)
             // last symbol
             cmd_offset += groupArray[2].rm_so - groupArray[1].rm_so;
             cmd_size = groupArray[2].rm_eo - groupArray[2].rm_so;
-            strncpy(&last_symbol[0], &command_line[cmd_offset], cmd_size);
+            strncpy(last_symbol, &command_line[cmd_offset], cmd_size);
+            last_symbol[cmd_size] = '\0';
             cmd_offset += cmd_size;
             curr_cmd_offset += cmd_size;
         }
@@ -85,7 +86,7 @@ struct pipeline *pipeline_build(const char *command_line)
 //            exit(1);
 //        }
         // printf("Current command: %s; with last symbol: %s; with prev_symbol: %s\n", curr_cmd, last_symbol, prev_symbol);
-        fflush(stdout);
+        // fflush(stdout);
 
         switch (prev_symbol[0]) {
             case '|':
@@ -120,7 +121,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     prevCommand->next = currCommand;
                 }
                 prevCommand = currCommand;
-                begin = result->commands;
+                // begin = result->commands;
 
                 // Convert string to array of pointers
 
