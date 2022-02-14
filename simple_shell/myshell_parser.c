@@ -16,12 +16,15 @@ struct pipeline *pipeline_build(const char *command_line)
 
     struct pipeline_command *currCommand;
     struct pipeline_command *prevCommand = NULL; // malloc(sizeof(struct pipeline_command));
-    // struct pipeline_command *begin;
+    
+    struct pipeline_command *begin;
+    
     struct pipeline *result = malloc(sizeof(struct pipeline));
     result->commands = NULL;
     result->is_background = false;
     char background_key[2] = {'&', '\0'};
-    // char EOL_key[2] = {'\n', '\0'};
+    
+    char EOL_key[2] = {'\n', '\0'};
     //int k;
     //char *it;
 
@@ -81,12 +84,6 @@ struct pipeline *pipeline_build(const char *command_line)
         }
 
         // create a pipeline command
-//        if (groupArray[0].rm_so != 0) {
-//            fprintf(stderr, "ERROR: Incorrect placement of symbols between commands or number of symbols in sequence");
-//            exit(1);
-//        }
-        // printf("Current command: %s; with last symbol: %s; with prev_symbol: %s\n", curr_cmd, last_symbol, prev_symbol);
-        // fflush(stdout);
 
         switch (prev_symbol[0]) {
             case '|':
@@ -104,14 +101,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     i++;
                 }
                 currCommand->command_args[i] = NULL;
-//                int argc = i;
-//                for(i = 0; i < argc; i++){
-//                    currCommand->command_args[i] = malloc(sizeof(trycmd[i]));
-//                    strcpy(currCommand->command_args[i], trycmd[i]);
-//                }
-
-//                currCommand->command_args = malloc(sizeof(curr_cmd));
-//                strcpy(currCommand->command_args, curr_cmd);
+//         
                 currCommand->next = NULL;
                 currCommand->redirect_in_path = NULL;
                 currCommand->redirect_out_path = NULL;
@@ -121,25 +111,25 @@ struct pipeline *pipeline_build(const char *command_line)
                     prevCommand->next = currCommand;
                 }
                 prevCommand = currCommand;
-                // begin = result->commands;
+                begin = result->commands;
 
                 // Convert string to array of pointers
 
 
                 break;
             case '<':
-                // if(begin != prevCommand) {
-                //     fprintf(stderr, "ERROR: Redirecting out of file not in first pipe");
-                //     exit(1);
-                // }
+                if(begin != prevCommand) {
+                    fprintf(stderr, "ERROR: Redirecting out of file not in first pipe");
+                    break;
+                }
                 prevCommand->redirect_in_path = malloc(sizeof(curr_cmd));
                 strcpy(prevCommand->redirect_in_path, curr_cmd);
                 break;
             case '>':
-                // if(((strcmp(last_symbol, background_key) != 0) && (strcmp(last_symbol, EOL_key) != 0))) {
-                //     fprintf(stderr, "ERROR: Redirecting out of a pipeline command which is not last");
-                //     exit(1);
-                // }
+                if(((strcmp(last_symbol, background_key) != 0) && (strcmp(last_symbol, EOL_key) != 0))) {
+                    fprintf(stderr, "ERROR: Redirecting out of a pipeline command which is not last");
+                    break;
+                }
                 prevCommand->redirect_out_path = malloc(sizeof(curr_cmd));
                 strcpy(prevCommand->redirect_out_path, curr_cmd);
                 break;
@@ -168,128 +158,6 @@ struct pipeline *pipeline_build(const char *command_line)
     regfree(&regex_type);
 
     return result;
-//    for (int i = 0; i < maxMatches; i++) {
-//        if (regexec(&regex_type, cursor, maxGroups, groupArray, 0))
-//            break;
-//
-//        cmd_offset = 0;
-//        for (int j = 0; j < maxGroups; j++) {
-//            if (groupArray[j].rm_so == (size_t) -1)
-//                break;
-//
-//            if (j == 0)
-//                cmd_offset = groupArray[j].rm_eo;
-//
-//            char cursorCopy[strlen(cursor) + 1];
-//            strcpy(cursorCopy, cursor);
-//            cursorCopy[groupArray[j].rm_eo] = 0;
-//            printf("Match %u, Group %u: [%2u-%2u]: %s\n", i, j, groupArray[j].rm_so, groupArray[j].rm_eo,
-//                   cursorCopy + groupArray[j].rm_so);
-//            //printf("%s   %d     %d    %s\n", cursor, groupArray[j].rm_so, groupArray[j].rm_eo, cursorCopy);
-//
-//            char commandInput[strlen(cursorCopy + groupArray[j].rm_so)];
-//            strcpy(commandInput, cursorCopy + groupArray[j].rm_so);
-//            commandInput[strlen(commandInput) - 1] = '\0';
-//            if (j == 0) {
-//                if (i == 0) {
-//                    result->is_background = false;
-//                    nextCommand = malloc(sizeof(struct pipeline_command));
-//                    nextCommand->command_args[0] = malloc(sizeof(commandInput));
-//                    strcpy(nextCommand->command_args[0], commandInput);
-//                    nextCommand->command_args[1] = NULL;
-//                    printf("%s\n", nextCommand->command_args[0]);
-//                    nextCommand->next = NULL;
-//                    nextCommand->redirect_in_path = NULL;
-//                    nextCommand->redirect_out_path = NULL;
-//                    result->commands = nextCommand;
-//                    tmp = nextCommand;
-//                    //printf("%s\n",tmp->command_args[0]);
-//
-//
-//                } else {
-//                    //printf("%s\n", commandInput);  //cursorCopy + groupArray[j].rm_so);
-//                    switch (symbolChar) {
-//                        case '|':
-//
-//                            nextCommand = malloc(sizeof(struct pipeline_command));
-//                            //  printf("%s\n",tmp->command_args[0]);
-//                            nextCommand->command_args[0] = malloc(sizeof(commandInput));
-//                            strcpy(nextCommand->command_args[0], commandInput);
-//                            nextCommand->command_args[1] = NULL;
-//                            //printf("%s\n", nextCommand->command_args[0]);
-//                            nextCommand->next = NULL;
-//                            tmp->next = nextCommand;
-//                            tmp = nextCommand;
-//
-//                            printf("|\n");
-//                            break;
-//                        case ' ':
-//                            k = -1;
-//                            //it = malloc(sizeof(nextCommand->command_args[k]));
-//                            do {
-//
-//                                //it = malloc(sizeof(nextCommand->command_args[k]));
-//                                it = nextCommand->command_args[k];
-//                                //printf("%s\n", it);
-//                                k = k + 1;
-//                            } while (it != NULL);
-//                            //free(it);
-//                            nextCommand->command_args[k - 1] = malloc(sizeof(commandInput));
-//                            strcpy(nextCommand->command_args[k - 1], commandInput);
-//                            nextCommand->command_args[k] = NULL;
-//                            //  printf("%s\n", result.commands->next->command_args[k-1]);
-//                            // tmp = nextCommand;
-//                            printf("space\n");
-//                            break;
-//                        case '\t':
-//                            k = -1;
-//                            //it = malloc(sizeof(nextCommand->command_args[k]));
-//                            do {
-//
-//                                //it = malloc(sizeof(nextCommand->command_args[k]));
-//                                it = nextCommand->command_args[k];
-//                                //printf("%s\n", it);
-//                                k = k + 1;
-//                            } while (it != NULL);
-//                            //free(it);
-//                            nextCommand->command_args[k - 1] = malloc(sizeof(commandInput));
-//                            strcpy(nextCommand->command_args[k - 1], commandInput);
-//
-//                            nextCommand->command_args[k] = NULL;
-//                            //  printf("%s\n", result.commands->next->command_args[k-1]);
-//                            // tmp = nextCommand;
-//                            printf("space\n");
-//                            break;
-//                        case '\n':
-//                            printf("space\n");
-//                            break;
-//                        case '>':
-//                            nextCommand->redirect_out_path = malloc(sizeof(commandInput));
-//                            strcpy(nextCommand->redirect_out_path, commandInput);
-//                            printf(">\n");
-//                            break;
-//                        case '<':
-//                            nextCommand->redirect_in_path = malloc(sizeof(commandInput));
-//                            strcpy(nextCommand->redirect_in_path, commandInput);
-//                            printf("<\n");
-//                            break;
-//                        case '&':
-//                            result->is_background = true;
-//                            printf("&\n");
-//                            break;
-//                        default:
-//                            printf("RegexFailed\n");
-//                            break;
-//                    }
-//                }
-//
-//
-//                symbolChar = cursorCopy[groupArray[j].rm_eo - 1];
-//            }
-//        }
-//        cursor += cmd_offset;
-
-
 
 }
 
@@ -314,14 +182,3 @@ void pipeline_free(struct pipeline *pipeline) {
     free(pipeline->commands);
     free(pipeline);
 }
-
-// int main() {
-//    const char *com = "ls  <  -l  | hf -l > xd   hahaha   \n";
-//    const char *trick = "ls";
-//    struct pipeline *commandtest;
-//    commandtest = pipeline_build(com);
-//    pipeline_free(commandtest);
-//    printf("Hello\n");
-//    printf("Testing\n");
-//    return 0;
-// }
