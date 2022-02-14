@@ -43,6 +43,7 @@ struct pipeline {
 					      the pipeline*/
 	bool is_background; /* True if this pipeline should execute in the
 			       background */
+	bool redirect_error;
 };
 
 /*

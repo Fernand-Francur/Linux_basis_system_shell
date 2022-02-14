@@ -22,6 +22,7 @@ struct pipeline *pipeline_build(const char *command_line)
     struct pipeline *result = malloc(sizeof(struct pipeline));
     result->commands = NULL;
     result->is_background = false;
+    result->redirect_error = false;
     char background_key[2] = {'&', '\0'};
     
     char EOL_key[2] = {'\n', '\0'};
@@ -119,7 +120,8 @@ struct pipeline *pipeline_build(const char *command_line)
                 break;
             case '<':
                 if(begin != prevCommand) {
-                    fprintf(stderr, "ERROR: Redirecting out of file not in first pipe");
+                    fprintf(stderr, "ERROR: Redirecting out of file not in first pipe\n");
+                    result->redirect_error = true;
                     break;
                 }
                 prevCommand->redirect_in_path = malloc(sizeof(curr_cmd));
@@ -127,7 +129,8 @@ struct pipeline *pipeline_build(const char *command_line)
                 break;
             case '>':
                 if(((strcmp(last_symbol, background_key) != 0) && (strcmp(last_symbol, EOL_key) != 0))) {
-                    fprintf(stderr, "ERROR: Redirecting out of a pipeline command which is not last");
+                    fprintf(stderr, "ERROR: Redirecting out of a pipeline command which is not last\n");
+                    result->redirect_error = true;
                     break;
                 }
                 prevCommand->redirect_out_path = malloc(sizeof(curr_cmd));

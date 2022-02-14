@@ -86,10 +86,10 @@ int main(int argc, char *argv[]) {
 
     while (should_run) {
        if (argc != 2) {
-           printf("my_shell&");
+           printf("my_shell$");
        } else if (argc == 2) {
            if (strcmp(argv[1], "-n") != 0) {
-               printf("my_shell&");
+               printf("my_shell$");
            }
        }
         fflush(stdout);
@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
             // stringInput[strlen(user_input)] = '\0';
             // printf("INPUT: %s\n", stringInput);
             cmdPipeline = pipeline_build(user_input);
+            // if (cmdPipeline->redirect_error) { break;}
 
 
 
@@ -111,7 +112,7 @@ int main(int argc, char *argv[]) {
             num_cmds = 0;
             pipe_idx = 0;
 
-            while (tmp != NULL) {
+            while (tmp != NULL && cmdPipeline->redirect_error != true) {
                 // init pipe
                 if (num_cmds > 0) {
                     if (pipe(pipes + (pipe_idx++ * 2)) == -1) {
