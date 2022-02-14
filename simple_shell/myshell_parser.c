@@ -46,7 +46,7 @@ struct pipeline *pipeline_build(const char *command_line)
 
     regexVal = regcomp(&regex_type, regPattern, REG_EXTENDED);
     if (regexVal) {
-        fprintf(stderr, "Regular Expression compilation failed Compilation failed\n");
+        perror("Regular Expression compilation failed Compilation failed");
         exit(1);
     }
 
@@ -120,7 +120,7 @@ struct pipeline *pipeline_build(const char *command_line)
                 break;
             case '<':
                 if(begin != prevCommand) {
-                    fprintf(stderr, "ERROR: Redirecting out of file not in first pipe\n");
+                    perror("ERROR: Redirecting out of file not in first pipe");
                     result->redirect_error = true;
                     break;
                 }
@@ -129,7 +129,7 @@ struct pipeline *pipeline_build(const char *command_line)
                 break;
             case '>':
                 if(((strcmp(last_symbol, background_key) != 0) && (strcmp(last_symbol, EOL_key) != 0))) {
-                    fprintf(stderr, "ERROR: Redirecting out of a pipeline command which is not last\n");
+                    perror("ERROR: Redirecting out of a pipeline command which is not last");
                     result->redirect_error = true;
                     break;
                 }
@@ -137,12 +137,12 @@ struct pipeline *pipeline_build(const char *command_line)
                 strcpy(prevCommand->redirect_out_path, curr_cmd);
                 break;
             case '&':
-                fprintf(stderr, "ERROR: Background operator not at end of pipeline" );
+                perror("ERROR: Background operator not at end of pipeline" );
                 exit(1);
             case '\n':
                 break;
             default:
-                fprintf(stderr, "ERROR: Unknown command separator: %s", prev_symbol);
+                perror("ERROR: Unknown command separator");
                  exit(1);
             break;
         }

@@ -45,7 +45,7 @@ void sigchlHandler(int signal) {
 
     while((child_Pid = waitpid(-1, &status, WNOHANG)) > 0) {
         // printf("Background child %d terminated with status %d\n", 
-        //                     child_Pid, status);
+                            // child_Pid, status);
 
     }
 }
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     sa.sa_handler = sigchlHandler;		// address of handler function
 
     if(sigaction(SIGCHLD, &sa, NULL) == -1)
-        fprintf(stderr, "ERROR: sigaction failure");
+       perror("ERROR: sigaction failure");
 
 
     while (should_run) {
@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
                         }
                     
                         if (execvp(tmp->command_args[0], tmp->command_args) < 0) {
-                            printf("ERROR: Invalid command\n");
+                            perror("ERROR: Invalid command");
                             _exit(1);
                         }
                         
@@ -213,9 +213,9 @@ int main(int argc, char *argv[]) {
                         //     pid, pid_status);
                 }
             } else {
-                printf("[1] ");
+                // printf("[1] ");
                 for (int i = 0; i < num_cmds; i++) {
-                    printf("%d ", pids[i]);
+                    // printf("%d ", pids[i]);
                 }
                 printf("\n");
             }
