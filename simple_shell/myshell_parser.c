@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 //First Try
+#define MAX_LINE_LENGTH 512
 
 struct pipeline *pipeline_build(const char *command_line)
 //struct pipeline pipeline_build(const char* command_line)
@@ -52,7 +53,7 @@ struct pipeline *pipeline_build(const char *command_line)
 
     char curr_cmd[200];
     memset(curr_cmd, '\0', 200);
-    char last_symbol[2];
+    char last_symbol[2] = {' ', '\0'};
     char prev_symbol[2] = {'|', '\0'};
     unsigned int curr_cmd_offset = 0;
     unsigned cmd_size;
@@ -96,7 +97,7 @@ struct pipeline *pipeline_build(const char *command_line)
                 int i = 0;
                 while(token != NULL) {
 //                    trycmd[i] = token;
-                    currCommand->command_args[i] = malloc(sizeof(token));
+                    currCommand->command_args[i] = malloc(sizeof(MAX_LINE_LENGTH));
                     strcpy(currCommand->command_args[i], token);
                     token = strtok(NULL, " ");
                     i++;
@@ -124,7 +125,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     result->redirect_error = true;
                     break;
                 }
-                prevCommand->redirect_in_path = malloc(sizeof(curr_cmd));
+                prevCommand->redirect_in_path = malloc(sizeof(MAX_LINE_LENGTH));
                 strcpy(prevCommand->redirect_in_path, curr_cmd);
                 break;
             case '>':
@@ -133,7 +134,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     result->redirect_error = true;
                     break;
                 }
-                prevCommand->redirect_out_path = malloc(sizeof(curr_cmd));
+                prevCommand->redirect_out_path = malloc(sizeof(MAX_LINE_LENGTH));
                 strcpy(prevCommand->redirect_out_path, curr_cmd);
                 break;
             case '&':
@@ -143,7 +144,7 @@ struct pipeline *pipeline_build(const char *command_line)
                 break;
             default:
                 perror("ERROR: Unknown command separator");
-                
+
                  exit(1);
             break;
         }

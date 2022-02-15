@@ -237,9 +237,10 @@ int main(int argc, char *argv[]) {
                 // printf("\n");
             }
             if (tmp != NULL) {
-                if (strcmp(tmp->command_args[0], "exit") == 0) /* exit command */
-                pipeline_free(cmdPipeline);
+                if (strcmp(tmp->command_args[0], "exit") == 0) {/* exit command */
+                    pipeline_free(cmdPipeline);
                     break;
+                }
             }
             if (cmdPipeline->commands != NULL && cmdPipeline->redirect_error != true) {
                 pipeline_free(cmdPipeline);
