@@ -143,6 +143,7 @@ struct pipeline *pipeline_build(const char *command_line)
                 break;
             default:
                 perror("ERROR: Unknown command separator");
+                
                  exit(1);
             break;
         }

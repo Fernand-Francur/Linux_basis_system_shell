@@ -44,8 +44,8 @@ void sigchlHandler(int signal) {
     pid_t child_Pid;
 
     while((child_Pid = waitpid(-1, &status, WNOHANG)) > 0) {
-        // printf("Background child %d terminated with status %d\n", 
-                            // child_Pid, status);
+        printf("Background child %d terminated with status %d\n", 
+                            child_Pid, status);
 
     }
 }
@@ -70,12 +70,15 @@ int main(int argc, char *argv[]) {
     struct sigaction sa;
 
     int f_in, f_out;
+    
     pid_t pids[MAX_CMDS];
     int pid_status;
 
     // pipes
     int pipes[(MAX_CMDS - 1) * 2];
 
+
+// try in another function ****************************
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
     sa.sa_handler = sigchlHandler;		// address of handler function
@@ -122,6 +125,7 @@ int main(int argc, char *argv[]) {
                 tmp = tmp->next;
                 num_cmds++;
             }
+
             num_pipes = pipe_idx;
 
             pipe_idx = -1;
@@ -151,7 +155,13 @@ int main(int argc, char *argv[]) {
                         // handle pipes
                         // INPUT
                         if (tmp->redirect_in_path != NULL) { // redirect input from file
+
                             f_in = open(tmp->redirect_in_path, O_RDONLY);
+                            if (f_in == -1) {
+                                perror("ERROR: File could not be read");
+                                pipeline_free(cmdPipeline);
+                                break;
+                            }
                             close(STDIN_FILENO);
                             dup(f_in);
                             close(f_in);
@@ -163,6 +173,11 @@ int main(int argc, char *argv[]) {
                         // OUTPUT
                         if (tmp->redirect_out_path != NULL) { // redirect output to file
                             f_out = open(tmp->redirect_out_path, O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU | S_IRGRP);
+                            if (f_out == -1) {
+                                perror("ERROR: File could not be read");
+                                pipeline_free(cmdPipeline);
+                                break;
+                            }
                             close(STDOUT_FILENO);
                             dup(f_out);
                             close(f_out);
@@ -182,11 +197,13 @@ int main(int argc, char *argv[]) {
                     
                         if (execvp(tmp->command_args[0], tmp->command_args) < 0) {
                             perror("ERROR: Invalid command");
+                            pipeline_free(cmdPipeline);
                             _exit(1);
                         }
                         
                         break;
                     case -1: // error
+                        pipeline_free(cmdPipeline);
                         _exit(1);
                         break;
                     default: // parent
@@ -217,17 +234,20 @@ int main(int argc, char *argv[]) {
                 for (int i = 0; i < num_cmds; i++) {
                     // printf("%d ", pids[i]);
                 }
-                printf("\n");
+                // printf("\n");
             }
             if (tmp != NULL) {
                 if (strcmp(tmp->command_args[0], "exit") == 0) /* exit command */
+                // pipeline_free(cmdPipeline);
                     break;
             }
             if (cmdPipeline->commands != NULL) {
                 pipeline_free(cmdPipeline);
             }
+         
         } else {
             if((fget_code == NULL) && feof(stdin)) {
+                // pipeline_free(cmdPipeline);
                 // printf("fget_code = %s\n", fget_code);
                 // printf("INITIAL INPUT: %s, size = %ld\n", user_input, strlen(user_input));
                 exit(0);

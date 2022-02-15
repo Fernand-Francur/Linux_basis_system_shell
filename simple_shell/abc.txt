@@ -1,8 +1,11 @@
 abc.txt
 a.out
 counts.txt
+doesthiswork.txt
 fed.txt
+getfile.txt
 gotem.txt
+helloworld.txt
 infinite.c
 infinite.out
 makefile
@@ -15,9 +18,12 @@ myshell.o
 myshell_parser.c
 myshell_parser.h
 myshell_parser.o
+newprog.c
+newprog.out
 Nowitworks.txt
 README.md
 README.txt
 testingcase
+trying.txt
 under_score
 wc.txt
