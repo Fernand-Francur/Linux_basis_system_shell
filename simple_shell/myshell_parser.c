@@ -97,7 +97,7 @@ struct pipeline *pipeline_build(const char *command_line)
                 int i = 0;
                 while(token != NULL) {
 //                    trycmd[i] = token;
-                    currCommand->command_args[i] = malloc(strlen(token) * sizeof(token));
+                    currCommand->command_args[i] = malloc(strlen(token) * sizeof(char));
                     strcpy(currCommand->command_args[i], token);
                     token = strtok(NULL, " ");
                     i++;
@@ -125,7 +125,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     result->redirect_error = true;
                     break;
                 }
-                prevCommand->redirect_in_path = malloc(strlen(prevCommand->redirect_in_path) * sizeof(curr_cmd));
+                prevCommand->redirect_in_path = malloc(strlen(curr_cmd) * sizeof(char));
                 strcpy(prevCommand->redirect_in_path, curr_cmd);
                 break;
             case '>':
@@ -134,7 +134,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     result->redirect_error = true;
                     break;
                 }
-                prevCommand->redirect_out_path = malloc(strlen(prevCommand->redirect_out_path) * sizeof(curr_cmd));
+                prevCommand->redirect_out_path = malloc(strlen(curr_cmd) * sizeof(curr_cmd));
                 strcpy(prevCommand->redirect_out_path, curr_cmd);
                 break;
             case '&':
