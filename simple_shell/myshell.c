@@ -241,10 +241,10 @@ int main(int argc, char *argv[]) {
                 // pipeline_free(cmdPipeline);
                     break;
             }
-            if (cmdPipeline->commands != NULL) {
+            if (cmdPipeline->commands != NULL && cmdPipeline->redirect_error != true) {
                 pipeline_free(cmdPipeline);
             }
-         
+
         } else {
             if((fget_code == NULL) && feof(stdin)) {
                 // pipeline_free(cmdPipeline);
