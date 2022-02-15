@@ -27,23 +27,13 @@ struct pipeline *pipeline_build(const char *command_line)
     char background_key[2] = {'&', '\0'};
     
     char EOL_key[2] = {'\n', '\0'};
-    //int k;
-    //char *it;
-
-    // struct pipeline_command* commandInit = malloc(sizeof(struct pipeline_command));
-    // char symbolChar = "\0";
-
-    //size_t maxMatches = 32; //Trying some code I found in regex_type documentation
+  
+  //Trying some code I found in regex_type documentation
     size_t maxGroups = 10;
     unsigned int cmd_offset = 0;
 
     regmatch_t groupArray[maxGroups];
     const char *regPattern = "[ \t]*([a-zA-Z0-9_\\.\\/\\-]+)[ \t]*([|><\\&\n]?)";
-    // ([||\\>|\\<|\\&|\n]?)
-    // char *cursor = malloc(sizeof(command_line));
-    // strcpy(cursor, command_line);
-
-    // printf("%s\n", command_line);
 
     regexVal = regcomp(&regex_type, regPattern, REG_EXTENDED);
     if (regexVal) {
@@ -57,7 +47,7 @@ struct pipeline *pipeline_build(const char *command_line)
     char prev_symbol[2] = {'|', '\0'};
     unsigned int curr_cmd_offset = 0;
     unsigned cmd_size;
-    // printf("before parsing\n");
+
     while ((regexec(&regex_type, &command_line[cmd_offset], maxGroups, groupArray, 0) == 0)) {
         while ((groupArray[2].rm_so == groupArray[2].rm_eo) && (cmd_offset < strlen(command_line)) ) {
             // keep building command
@@ -92,18 +82,17 @@ struct pipeline *pipeline_build(const char *command_line)
                 currCommand = malloc(sizeof(struct pipeline_command));
 
                 char * token;
-               // char * trycmd[100];
+
                 token = strtok(curr_cmd, " ");
                 int i = 0;
                 while(token != NULL) {
-//                    trycmd[i] = token;
-                    currCommand->command_args[i] = malloc(strlen(token) * sizeof(char));
+
+                    currCommand->command_args[i] = malloc((strlen(token)+1) * sizeof(char));
                     strcpy(currCommand->command_args[i], token);
                     token = strtok(NULL, " ");
                     i++;
                 }
-                currCommand->command_args[i] = NULL;
-//         
+                currCommand->command_args[i] = NULL;       
                 currCommand->next = NULL;
                 currCommand->redirect_in_path = NULL;
                 currCommand->redirect_out_path = NULL;
@@ -125,7 +114,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     result->redirect_error = true;
                     break;
                 }
-                prevCommand->redirect_in_path = malloc(strlen(curr_cmd) * sizeof(char));
+                prevCommand->redirect_in_path = malloc((strlen(curr_cmd)+1) * sizeof(char));
                 strcpy(prevCommand->redirect_in_path, curr_cmd);
                 break;
             case '>':
@@ -134,7 +123,7 @@ struct pipeline *pipeline_build(const char *command_line)
                     result->redirect_error = true;
                     break;
                 }
-                prevCommand->redirect_out_path = malloc(strlen(curr_cmd) * sizeof(curr_cmd));
+                prevCommand->redirect_out_path = malloc((strlen(curr_cmd)+1) * sizeof(curr_cmd));
                 strcpy(prevCommand->redirect_out_path, curr_cmd);
                 break;
             case '&':
@@ -154,7 +143,6 @@ struct pipeline *pipeline_build(const char *command_line)
         };
 
         memset(curr_cmd, '\0', 80);
-        // printf("Current command: %s; with last symbol: %s; with prev_symbol: %s\n", curr_cmd, last_symbol, prev_symbol);
         curr_cmd_offset = 0;
         prev_symbol[0] = last_symbol[0];
         last_symbol[0] = '\0';
