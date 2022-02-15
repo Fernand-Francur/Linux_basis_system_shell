@@ -49,13 +49,19 @@ int main(int argc, char *argv[]) {
     // pipes
     int pipes[(MAX_CMDS - 1) * 2];
 
+    struct sigaction sa;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    sa.sa_handler = sigchlHandler;      // address of handler function
 
+    if(sigaction(SIGCHLD, &sa, NULL) == -1)
+       perror("ERROR: sigaction failure");
 
     
-    	 if (signal(SIGCHLD, sigchlHandler) == SIG_ERR) {
-                    perror("ERROR: signal failed");
-                    exit(1);
-                }
+    	 // if (signal(SIGCHLD, sigchlHandler) == SIG_ERR) {
+      //               perror("ERROR: signal failed");
+      //               exit(1);
+      //           }
 
     while (should_run) {
         
